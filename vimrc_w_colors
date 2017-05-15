@@ -1,0 +1,164 @@
+" BCF --
+" To add a plug in, just add it to the list below and then
+" run :PluginInstall.
+"
+" From https://github.com/VundleVim/Vundle.vim/issues/575
+" (To solve opening gVim from GitBash.)
+" if has("win16") || has("win32") || has("win64")
+"   if &shell=~#'bash$'
+"     set shell=$COMSPEC " sets shell to correct path for cmd.exe
+"   endif
+" endif
+
+" From https://github.com/VundleVim/Vundle.vim#quick-start
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+" Run :PluginInstall from Vim to install
+Plugin 'VundleVim/Vundle.vim'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+"" plugin on GitHub repo (eg, https://github.com/tpope/vim-fugitive)
+"Plugin 'tpope/vim-fugitive'
+"" plugin from http://vim-scripts.org/vim/scripts.html
+"Plugin 'L9'
+"" Git plugin not hosted on GitHub
+"Plugin 'git://git.wincent.com/command-t.git'
+"" git repos on your local machine (i.e. when working on your own plugin)
+"Plugin 'file:///home/gmarik/path/to/plugin'
+"" The sparkup vim script is in a subdirectory of this repo called vim.
+"" Pass the path to set the runtimepath properly.
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+"" Install L9 and avoid a Naming conflict if you've already installed a
+"" different version somewhere else.
+"Plugin 'ascenator/L9', {'name': 'newL9'}
+
+Plugin 'mileszs/ack.vim'
+Plugin 'ggreer/the_silver_searcher'
+let g:ackprg = 'ag --nogroup --nocolor --column'
+
+Plugin 'ctrlpvim/ctrlp.vim'
+"map <leader>y :CtrlPBuffer<cr>
+
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-bundler'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-rake'
+Plugin 'pangloss/vim-javascript'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'othree/html5.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'scrooloose/syntastic'
+Plugin 'wavded/vim-stylus'
+Plugin 'mustache/vim-mustache-handlebars'
+Plugin 'digitaltoad/vim-pug'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+let g:airline#extensions#tabline#enabled = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" BCF - This was slow, maybe it conflicts with my other paren autocomplete:
+" let g:mustache_abbreviations = 1
+
+if executable('ag')
+  " Use ag over grep "
+  set grepprg=ag\ --nogroup\ --nocolor\ --column
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore "
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache "
+  let g:ctrlp_use_caching = 0
+
+  " bind \ (backward slash) to grep shortcut "
+  command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+  nnoremap \ :Ag<SPACE>
+endif
+
+" bind K to grep word under cursor "
+" bcf -- I comment this out - it's not working, and seems to crash:
+" nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+" bind Tab and Shift-Tab to cycle through buffers "
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
+
+" Config settings -------------
+
+set history=100
+set incsearch
+set hlsearch
+set backspace=indent,eol,start
+set go-=T
+set tabstop=2
+set expandtab
+set shiftwidth=2
+set softtabstop=2
+set shiftround
+
+" bcf:
+set hidden
+set autoindent
+set smartindent
+
+set splitbelow
+set splitright
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-H> <C-W><C-H>
+nnoremap <C-L> <C-W><C-L>
+
+set lines=46
+set columns=120
+set number
+" Auto-updates the buffer when file is changed from outside:
+set autoread
+
+" In the gui, choose the font you want via the Edit menu,
+" then check :set guifont?
+" and copy it to here.
+set guifont=Liberation\ Mono\ 11
+
+set wildignore+=*/.git
+
+" Autodelete end-of-line whitespace upon saving:
+autocmd BufWritePre * :%s/\s\+$//e
+
+syntax on
+
+" Put color schemes in ~/.vim/colors/
+" NO -- for windows, put them in ~/vimfiles/colors/ (note, not a hidden directory).
+colorscheme vividchalk
+" colorscheme vividchalk2
+"colorscheme railscasts
+"colorscheme noctu
+" colorscheme candy
+" colorscheme jellybeans
